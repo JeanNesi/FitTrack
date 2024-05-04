@@ -1,0 +1,118 @@
+//#region CONFIG
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//#endregion
+
+//#region  PERMISSIONS
+model Permission {
+  id        String   @id @unique @default(nanoid(12))
+  name      String   @unique
+  label     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userPermissions UserPermission[]
+
+  @@map("permissions")
+}
+
+model UserPermission {
+  id           String   @id @unique @default(nanoid(12))
+  userId       String
+  permissionId String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@map("userPermissions")
+}
+
+//#endregion
+
+//#region USERS
+model User {
+  id             String   @id @unique @default(nanoid(12))
+  email          String   @unique
+  username       String   @unique
+  isBlocked      Boolean  @default(false)
+  password       String
+  profilePicture String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  userAccessLogs UserAccessLogs[]
+  UserPermission UserPermission[]
+  UserMission    UserMission[]
+  UserLevel      UserLevel[]
+
+  @@map("users")
+}
+
+model UserLevel {
+  id                          String   @id @unique @default(nanoid(12))
+  userId                      String   @unique
+  level                       Int      @default(1)
+  experiencePoints            Int      @default(0)
+  experiencePointsToNextLevel Int      @default(1000)
+  createdAt                   DateTime @default(now())
+  updatedAt                   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("userLevels")
+}
+
+model UserAccessLogs {
+  id        String   @id @unique @default(nanoid(12))
+  userId    String?
+  ipAddress String?
+  OS        String?
+  browser   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@map("userAccessLogs")
+}
+
+//#endregion
+
+//#region Missions
+model Mission {
+  id               String   @id @unique @default(nanoid(12))
+  title            String   @unique
+  description      String
+  experiencePoints Int
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  UserMission UserMission[]
+
+  @@map("missions")
+}
+
+model UserMission {
+  id          String   @id @unique @default(nanoid(12))
+  userId      String
+  missionId   String
+  isCompleted Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mission Mission @relation(fields: [missionId], references: [id], onDelete: Cascade)
+
+  @@map("userMissions")
+}
+
+//#endregion
