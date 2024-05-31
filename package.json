@@ -7,6 +7,7 @@
     "dev": "tsc --noEmit && ts-node-dev --respawn --exit-child --transpile-only --ignore-watch node_modules --clear src/app.ts",
     "start": "node dist/src/app.js",
     "prepare": "husky install",
+    "build": "tsc",
     "pre-commit": "lint-staged",
     "vercel-build": "npx prisma migrate deploy"
   },
