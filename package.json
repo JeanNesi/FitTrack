@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsc --noEmit && ts-node-dev --respawn --exit-child --transpile-only --ignore-watch node_modules --clear src/app.ts",
-    "start": "node dist/src/app.js",
+    "dev": "tsc --noEmit && ts-node-dev --respawn --exit-child --transpile-only --ignore-watch node_modules --clear src/index.ts",
+    "start": "node dist/src/index.js",
     "prepare": "husky install",
     "build": "tsc",
     "pre-commit": "lint-staged",
