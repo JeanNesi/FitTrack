@@ -3,21 +3,21 @@ import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 import 'express-async-errors';
-import { initCron } from './cron';
+// import { initCron } from './cron';
 import { corsOptions } from './config/corsOptions';
-import { serverRouter } from './api/routes';
+// import { serverRouter } from './api/routes';
 import { errorHandler } from './api/utils/error';
 import 'dotenv/config';
 
 export const server = express();
 
-initCron();
+// initCron();
 
 server.use(cors(corsOptions));
 server.use(express.json());
 
-server.use('/api', serverRouter);
 server.get('/', (_req, res) => res.status(200).send('OK'));
+// server.use('/api', serverRouter);
 
 server.use(helmet());
 server.use(errorHandler);
