@@ -2,7 +2,7 @@
   "name": "fit-track-server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "dev": "tsc --noEmit && ts-node-dev --respawn --exit-child --transpile-only --ignore-watch node_modules --clear src/index.ts",
     "start": "node dist/src/index.js",
