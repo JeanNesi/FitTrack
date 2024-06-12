@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "dev": "tsc --noEmit && ts-node-dev --respawn --exit-child --transpile-only --ignore-watch node_modules --clear src/index.ts",
-    "start": "node dist/src/index.js",
+    "dev": "tsc --noEmit && ts-node-dev --respawn --exit-child --transpile-only --ignore-watch node_modules --clear src/app.ts",
+    "start": "node dist/src/app.js",
     "prepare": "husky install",
     "build": "tsc",
     "pre-commit": "lint-staged",
@@ -15,7 +15,7 @@
     "seed": "ts-node-dev prisma/seed.ts"
   },
   "keywords": [],
-  "author": "Luiz Gustavo Peruchi de Oliveira",
+  "author": "Jean Carlos",
   "license": "MIT",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.433.0",

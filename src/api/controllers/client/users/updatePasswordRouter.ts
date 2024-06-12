@@ -1,15 +1,17 @@
-import { hashSync } from 'bcrypt';
+import { hashSync, compare } from 'bcrypt';
 import { Request, Response } from 'express';
 import { findUser, updateUser } from '../../../services/users';
 import { ErrorMessage } from '../../../utils/error';
 import { checkNeedExists, checkValues } from '../../../utils/validator';
 
 export async function updateUserPasswordController(req: Request, res: Response) {
-  const { newPassword, userId } = req.body;
+  const { password, newPassword } = req.body;
+
+  const userId = req.user.id;
 
   checkValues([
+    { label: 'senha', type: 'string', value: password },
     { label: 'nova senha', type: 'string', value: newPassword },
-    { label: 'id de usuário', type: 'string', value: userId },
   ]);
 
   if ((newPassword as string).length < 6) {
@@ -21,7 +23,16 @@ export async function updateUserPasswordController(req: Request, res: Response) 
 
   const existingUser = await findUser({ id: userId });
 
+  const passwordIsValid = await compare(password, existingUser?.password as string);
+
   checkNeedExists([{ label: 'usuário', value: existingUser }]);
+
+  if (!passwordIsValid) {
+    throw new ErrorMessage({
+      message: 'Senha atual incorreta. Por favor, tente novamente.',
+      statusCode: '422 UNPROCESSABLE CONTENT',
+    });
+  }
 
   await updateUser({ data: { password: hashSync(newPassword, 12) }, where: { id: userId } });
 
