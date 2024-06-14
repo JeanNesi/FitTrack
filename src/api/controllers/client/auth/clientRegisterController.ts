@@ -7,7 +7,6 @@ import { createUser, findUser } from '../../../services/users';
 import { ErrorMessage } from '../../../utils/error';
 import { createAccessLog, updateAccessLog } from '../../../services/accessLogs';
 import { createInitialsAvatar } from '../../../utils/api';
-import { createUserLevel } from '../../../services/userLevel';
 
 interface IBody {
   email: string;
@@ -66,12 +65,6 @@ export async function clientRegisterController(req: Request, res: Response) {
       password: hashSync(password, 12),
       username,
       profilePicture: createInitialsAvatar(username),
-    },
-  });
-
-  await createUserLevel({
-    data: {
-      userId: user.id,
     },
   });
 

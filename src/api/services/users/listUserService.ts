@@ -9,6 +9,7 @@ interface IFindManyUserService {
 export async function listUserService({ page, take, filter }: IFindManyUserService) {
   const where: IPrisma.UserWhereInput = {
     username: { contains: filter, mode: 'insensitive' },
+    isBlocked: false,
   };
 
   const [users, count] = await prisma.$transaction([
@@ -16,15 +17,7 @@ export async function listUserService({ page, take, filter }: IFindManyUserServi
       select: {
         id: true,
         username: true,
-        email: true,
         profilePicture: true,
-        isBlocked: true,
-        userAccessLogs: {
-          select: { createdAt: true },
-          take: 1,
-          orderBy: { createdAt: 'desc' },
-        },
-        UserPermission: { select: { permission: { select: { name: true, label: true } } } },
       },
       take,
       skip: (page - 1) * take,

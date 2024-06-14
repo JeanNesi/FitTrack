@@ -22,15 +22,12 @@ export async function listFrindshipService({
     prisma.friendship.findMany({
       select: {
         id: true,
+        isAccepted: true,
         user: {
           select: {
             username: true,
             profilePicture: true,
-            UserLevel: {
-              select: {
-                level: true,
-              },
-            },
+            level: true,
           },
         },
       },

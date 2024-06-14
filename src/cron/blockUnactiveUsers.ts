@@ -4,7 +4,7 @@ import { findManyUsers } from '../api/services/users/findManyUsers';
 import { removeDays } from '../api/utils/dateTime';
 
 export async function blockUnactiveUsers() {
-  const users = await findManyUsers({ isBlocked: false });
+  const users = await findManyUsers({ where: { isBlocked: false } });
 
   const lastMonth = removeDays({ date: new Date(), days: 30 });
 

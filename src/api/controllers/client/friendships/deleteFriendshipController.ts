@@ -1,13 +1,18 @@
 import { Response, Request } from 'express';
-import { deleteFriendshipService } from '../../../services/friendships';
-import { checkValues } from '../../../utils/validator'
+import { deleteFriendshipService, findFriendshipService } from '../../../services/friendships';
+import { checkNeedExists, checkValues } from '../../../utils/validator';
 
 export async function deleteFriendshipController(req: Request, res: Response) {
-  const { friendshipId } = req.params as any as { friendshipId: string };
+  const { friendshipId } = req.query as any as { friendshipId: string };
 
   checkValues([{ label: 'Amizade', type: 'string', value: friendshipId }]);
 
-  await deleteFriendshipService({ where: { id: friendshipId } })
+  const friendship = await findFriendshipService({ where: { id: friendshipId } });
+  checkNeedExists([{ label: 'Amizade', value: friendship }]);
 
-  return res.status(200).json({ message: 'Amizade excluído com sucesso.' });
+  await deleteFriendshipService({ where: { id: friendshipId } });
+
+  return res
+    .status(200)
+    .json({ message: `Amizade ${friendship.isAccepted ? 'desfeita' : 'recusada'} com sucesso.` });
 }
