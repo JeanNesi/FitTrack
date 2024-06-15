@@ -23,14 +23,6 @@ export async function upsertDefaultUser() {
     where: { email: defaultUserEmail },
   });
 
-  await prisma.userLevel.upsert({
-    create: {
-      userId: id,
-    },
-    update: {},
-    where: { userId: id },
-  });
-
   const missions = await prisma.mission.findMany({
     select: { id: true },
   });

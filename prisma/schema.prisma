@@ -59,6 +59,7 @@ model User {
   UserMission    UserMission[]
   users          Friendship[]     @relation("User")
   friends        Friendship[]     @relation("Friend")
+  UserWorkouts   UserWorkouts[]
 
   @@map("users")
 }
@@ -122,3 +123,62 @@ model UserMission {
 }
 
 //#endregion
+
+// #region Workouts
+enum WorkoutsType {
+  CARDIO
+  STRENGTH
+  FLEXIBILITY
+  BALANCE
+  ENDURANCE
+  POWER
+  SPEED
+  AGILITY
+  PLYOMETRICS
+  FUNCTIONAL
+  HIIT
+  CIRCUIT
+  TABATA
+  INTERVAL
+  CROSSFIT
+  CALISTHENICS
+  BODYWEIGHT
+  WEIGHTLIFTING
+  BODYBUILDING
+  YOGA
+  PILATES
+  BARRE
+  DANCE
+  MARTIAL_ARTS
+  BOXING
+  KICKBOXING
+  MUAY_THAI
+  JIU_JITSU
+  WRESTLING
+  MMA
+  FITNESS
+  SPORTS
+  REHABILITATION
+  PHYSIOTHERAPY
+  OTHER
+}
+
+model UserWorkouts {
+  id          String       @id @unique @default(nanoid(12))
+  name        String
+  description String?
+  workoutType WorkoutsType @default(OTHER)
+  userId      String
+
+  initialDateTime DateTime
+  finalDateTime   DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("userWorkouts")
+}
+
+// #endregion
