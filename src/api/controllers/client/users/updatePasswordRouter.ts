@@ -21,7 +21,7 @@ export async function updateUserPasswordController(req: Request, res: Response) 
     });
   }
 
-  const existingUser = await findUser({ id: userId });
+  const existingUser = await findUser({ where: { id: userId } });
 
   const passwordIsValid = await compare(password, existingUser?.password as string);
 

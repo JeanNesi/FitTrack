@@ -25,6 +25,7 @@ export async function findManyUserController(req: Request, res: Response) {
     page: forceAbsoluteNumber(page || '1'),
     take: forceAbsoluteNumber(take || '20'),
     filter,
+    userId: req.user.id,
   });
 
   return res.status(200).json({ users, count });

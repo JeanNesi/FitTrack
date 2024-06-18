@@ -46,6 +46,8 @@ model User {
   isBlocked      Boolean @default(false)
   password       String
   profilePicture String
+  weight         Float?
+  height         Float?
 
   level                       Int @default(1)
   experiencePoints            Int @default(0)
@@ -172,6 +174,7 @@ model Workout {
 
   initialDateTime DateTime
   finalDateTime   DateTime?
+  totalTime       Int?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

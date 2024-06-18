@@ -14,7 +14,7 @@ export async function listFriendRakingController(req: Request, res: Response) {
       },
     },
     where: {
-      userId: req.user.id,
+      OR: [{ userId: req.user.id }, { friendId: req.user.id }],
       isAccepted: true,
     },
     take: 100,

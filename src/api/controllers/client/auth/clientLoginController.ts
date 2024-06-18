@@ -24,7 +24,7 @@ export async function clientLoginController(req: Request, res: Response) {
     { label: 'Senha', type: 'string', value: password },
   ]);
 
-  const user = await findUser({ email: { equals: email, mode: 'insensitive' } });
+  const user = await findUser({ where: { email: { equals: email, mode: 'insensitive' } } });
 
   if (!user) {
     throw new ErrorMessage({

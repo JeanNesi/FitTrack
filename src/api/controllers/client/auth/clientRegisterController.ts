@@ -32,7 +32,7 @@ export async function clientRegisterController(req: Request, res: Response) {
     { label: 'Nome de usuário', type: 'string', value: username },
   ]);
 
-  const checkEmail = await findUser({ email: { equals: email, mode: 'insensitive' } });
+  const checkEmail = await findUser({ where: { email: { equals: email, mode: 'insensitive' } } });
 
   if (checkEmail) {
     throw new ErrorMessage({
@@ -41,7 +41,9 @@ export async function clientRegisterController(req: Request, res: Response) {
     });
   }
 
-  const checkUsername = await findUser({ username: { equals: username, mode: 'insensitive' } });
+  const checkUsername = await findUser({
+    where: { username: { equals: username, mode: 'insensitive' } },
+  });
 
   if (checkUsername) {
     throw new ErrorMessage({

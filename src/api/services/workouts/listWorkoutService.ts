@@ -28,6 +28,7 @@ export async function listWorkoutService({
         finalDateTime: true,
         createdAt: true,
         workoutType: true,
+        totalTime: true,
       },
       take,
       skip: (page - 1) * take,

@@ -1,93 +1,61 @@
 import { Request, Response } from 'express';
 import { checkUserEmailAlreadyUsedService, findUser, updateUser } from '../../../services/users';
 
-import { checkNeedExists, checkValues } from '../../../utils/validator';
-import { TPermissions } from '../../../../types/permissions';
+import { checkValues } from '../../../utils/validator';
 import { createInitialsAvatar } from '../../../utils/api/createInitialsAvatar';
-import { findPermission } from '../../../services/permissions';
+import { ErrorMessage } from '../../../utils/error';
 
 interface IBody {
-  userId: string;
   username: string;
-  profilePicture: string;
   email: string;
-  isBlocked: boolean;
-  permission: TPermissions;
+  weight: number;
+  height: number;
 }
 
 export async function updateUserController(req: Request, res: Response) {
-  const { userId, username, profilePicture, email, isBlocked, permission }: IBody = req.body;
+  const { username, email, weight, height }: IBody = req.body;
+
+  const userId = req.user.id;
 
   // #region VALIDATIONS
   checkValues([
-    {
-      label: 'ID do usuário',
-      type: 'string',
-      value: userId,
-    },
-    {
-      label: 'nome de usuário',
-      type: 'string',
-      value: username,
-    },
-    {
-      label: 'email',
-      type: 'string',
-      value: email,
-    },
-    {
-      label: 'Status',
-      type: 'boolean',
-      value: isBlocked,
-    },
-    {
-      label: 'permission',
-      type: 'string',
-      value: permission,
-    },
-    {
-      label: 'imagem',
-      type: 'string',
-      value: profilePicture,
-      required: false,
-    },
+    { label: 'Email', type: 'string', value: email },
+    { label: 'Nome de usuário', type: 'string', value: username },
+    { label: 'Altura', type: 'float', value: height, allowZero: true, required: false },
+    { label: 'Peso', type: 'float', value: weight, allowZero: true, required: false },
   ]);
 
   const lowerCaseEmail = email.toLowerCase();
   await checkUserEmailAlreadyUsedService({ email: lowerCaseEmail, idToIgnore: userId });
-  await findUser({ id: userId });
+
+  const checkUsername = await findUser({
+    where: {
+      username: { equals: username, mode: 'insensitive' },
+      id: { not: userId },
+    },
+  });
+
+  if (checkUsername) {
+    throw new ErrorMessage({
+      message: 'Nome de usuário já está sendo utilizado.',
+      statusCode: '422 UNPROCESSABLE CONTENT',
+    });
+  }
 
   // #endregion
 
-  const isYourself = req.user.id === userId;
-  let UserPermission;
-
-  if (!isYourself) {
-    const existingPermission = await findPermission({ name: permission });
-
-    checkNeedExists([{ label: 'permissão', value: existingPermission }]);
-
-    UserPermission = {
-      deleteMany: {},
-      create: {
-        permission: { connect: { id: existingPermission!.id } },
-      },
-    };
-  }
-
-  const user = await updateUser({
+  await updateUser({
     data: {
       email: lowerCaseEmail,
       username,
-      isBlocked: isYourself ? false : isBlocked,
-      profilePicture: profilePicture || createInitialsAvatar(username),
-      UserPermission,
+      profilePicture: createInitialsAvatar(username),
+      weight,
+      height,
     },
     where: { id: userId },
   });
 
   return res.status(201).json({
-    user,
-    message: 'Usuário atualizado com sucesso!',
+    message: 'Perfil atualizado com sucesso!',
   });
 }

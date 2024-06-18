@@ -13,8 +13,10 @@ export async function adminPermissionMiddleware(req: Request, _res: Response, ne
   }
 
   const userWithPermission = await findUser({
-    id: user.id,
-    UserPermission: { some: { permission: { name: 'admin' } } },
+    where: {
+      id: user.id,
+      UserPermission: { some: { permission: { name: 'admin' } } },
+    },
   });
 
   if (!userWithPermission) {

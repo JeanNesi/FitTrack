@@ -1,5 +1,5 @@
 import { prisma, IPrisma } from '../../../../prisma';
 
-export function findUser(where: IPrisma.UserWhereInput) {
-  return prisma.user.findFirst({ where });
+export function findUser(args: IPrisma.UserFindFirstArgs) {
+  return prisma.user.findFirst(args);
 }

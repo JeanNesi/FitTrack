@@ -10,3 +10,5 @@ export * from './dateTimeFormatter';
 export * from './changeTime';
 export * from './changeUTCTime';
 export * from './setToUTCMidnight';
+
+export * from './getMinutesBetweenDates';
