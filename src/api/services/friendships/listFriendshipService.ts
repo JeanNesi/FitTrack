@@ -5,6 +5,7 @@ interface IFindManyFrindshipService {
   page: number;
   filter: string;
   pendingFriendships: boolean;
+  userId: string;
 }
 
 export async function listFrindshipService({
@@ -12,9 +13,14 @@ export async function listFrindshipService({
   take,
   filter,
   pendingFriendships,
+  userId,
 }: IFindManyFrindshipService) {
   const where: IPrisma.FriendshipWhereInput = {
-    user: { username: { contains: filter, mode: 'insensitive' } },
+    user: {
+      username: { contains: filter, mode: 'insensitive' },
+    },
+    friendId: pendingFriendships ? userId : undefined,
+    OR: pendingFriendships ? [{ friendId: userId }, { userId }] : undefined,
     isAccepted: !pendingFriendships,
   };
 

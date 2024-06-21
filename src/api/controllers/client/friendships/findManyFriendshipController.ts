@@ -36,6 +36,7 @@ export async function findManyFriendshipController(req: Request, res: Response) 
     take: forceAbsoluteNumber(take || '20'),
     filter,
     pendingFriendships,
+    userId: req.user.id,
   });
 
   return res.status(200).json({ friendships, count });
