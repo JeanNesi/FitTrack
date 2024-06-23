@@ -3,6 +3,7 @@ import { checkNeedExists, checkValues } from '../../../utils/validator';
 import { findWorkoutService, updateWorkoutService } from '../../../services/workouts';
 import { ErrorMessage } from '../../../utils/error';
 import { getMinutesBetweenDates } from '../../../utils/dateTime';
+import { updateManyUserMissionsProgressService } from '../../../services/usermissions';
 
 interface IBody {
   workoutId: string;
@@ -54,6 +55,11 @@ export async function finishWorkoutController(req: Request, res: Response) {
     where: {
       id: workoutId,
     },
+  });
+
+  await updateManyUserMissionsProgressService({
+    totalTime,
+    userId: req.user.id,
   });
 
   return res.status(200).json({ message: 'Treino finalizado com sucesso!' });

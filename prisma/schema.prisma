@@ -97,13 +97,26 @@ model Friendship {
 //#endregion
 
 //#region Missions
+
+enum MissonType {
+  TIME
+  REPETITION
+  WORKOUT_TYPE
+  WORKOUT
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
 model Mission {
-  id               String   @id @unique @default(nanoid(12))
-  title            String   @unique
+  id               String     @id @unique @default(nanoid(12))
+  title            String     @unique
   description      String
   experiencePoints Int
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  type             MissonType
+  goal             Int
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
 
   UserMission UserMission[]
 
@@ -115,6 +128,7 @@ model UserMission {
   userId      String
   missionId   String
   isCompleted Boolean  @default(false)
+  progress    Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -175,6 +189,8 @@ model Workout {
   initialDateTime DateTime
   finalDateTime   DateTime?
   totalTime       Int?
+
+  isDeleted Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

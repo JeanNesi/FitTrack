@@ -7,6 +7,7 @@ import { createUser, findUser } from '../../../services/users';
 import { ErrorMessage } from '../../../utils/error';
 import { createAccessLog, updateAccessLog } from '../../../services/accessLogs';
 import { createInitialsAvatar } from '../../../utils/api';
+import { createManyUserMissionOnRegisterService } from '../../../services/usermissions';
 
 interface IBody {
   email: string;
@@ -71,6 +72,8 @@ export async function clientRegisterController(req: Request, res: Response) {
   });
 
   await updateAccessLog({ data: { userId: user.id }, where: { id: accessLog.id } });
+
+  await createManyUserMissionOnRegisterService({ userId: user.id });
 
   const token = await generateToken({ user: { id: user.id } });
 

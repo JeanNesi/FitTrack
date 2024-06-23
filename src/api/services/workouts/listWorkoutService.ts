@@ -16,6 +16,7 @@ export async function listWorkoutService({
   const where: IPrisma.WorkoutWhereInput = {
     user: { username: { contains: filter, mode: 'insensitive' } },
     finalDateTime: completedWorkouts ? { not: null } : { equals: null },
+    isDeleted: false,
   };
 
   const [workouts, count] = await prisma.$transaction([

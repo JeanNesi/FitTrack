@@ -17,7 +17,7 @@ export async function listUserMetricsController(req: Request, res: Response) {
 
   // #endregion
 
-  const { missionsCompleted, user, workoutsAverageTime, workoutsExecuted } =
+  const { missionsCompleted, user, workoutsAverageTime, workoutsExecuted, consecutiveDays } =
     await userMetricsService({
       userId,
     });
@@ -27,5 +27,8 @@ export async function listUserMetricsController(req: Request, res: Response) {
     userLevel: user?.level,
     workoutsAverageTime: workoutsAverageTime._avg.totalTime,
     workoutsExecuted,
+    experiencePoints: user?.experiencePoints,
+    experiencePointsToNextLevel: user?.experiencePointsToNextLevel,
+    consecutiveDays,
   });
 }

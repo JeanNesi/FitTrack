@@ -1,4 +1,5 @@
 import { prisma } from '../../../../prisma';
+import { calculateConsecutiveDaysService } from '../workouts';
 
 interface IUserMetricsService {
   userId: string;
@@ -29,6 +30,8 @@ export async function userMetricsService({ userId }: IUserMetricsService) {
       prisma.user.findFirst({
         select: {
           level: true,
+          experiencePoints: true,
+          experiencePointsToNextLevel: true,
         },
         where: {
           id: userId,
@@ -36,5 +39,7 @@ export async function userMetricsService({ userId }: IUserMetricsService) {
       }),
     ]);
 
-  return { workoutsAverageTime, missionsCompleted, workoutsExecuted, user };
+  const consecutiveDays = await calculateConsecutiveDaysService({ userId });
+
+  return { workoutsAverageTime, missionsCompleted, workoutsExecuted, user, consecutiveDays };
 }
