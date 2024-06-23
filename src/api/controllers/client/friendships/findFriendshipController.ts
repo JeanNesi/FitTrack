@@ -1,6 +1,6 @@
 import { Response, Request } from 'express';
 import { findFriendshipService } from '../../../services/friendships';
-import { checkValues } from '../../../utils/validator'
+import { checkValues } from '../../../utils/validator';
 
 export async function findFriendshipController(req: Request, res: Response) {
   const { friendshipId } = req.params as any as { friendshipId: string };
