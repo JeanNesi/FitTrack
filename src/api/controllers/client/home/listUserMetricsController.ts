@@ -17,10 +17,16 @@ export async function listUserMetricsController(req: Request, res: Response) {
 
   // #endregion
 
-  const { missionsCompleted, user, workoutsAverageTime, workoutsExecuted, consecutiveDays } =
-    await userMetricsService({
-      userId,
-    });
+  const {
+    missionsCompleted,
+    user,
+    workoutsAverageTime,
+    workoutsExecuted,
+    consecutiveDays,
+    hasMissionsToCollect,
+  } = await userMetricsService({
+    userId,
+  });
 
   return res.status(200).json({
     missionsCompleted,
@@ -30,5 +36,6 @@ export async function listUserMetricsController(req: Request, res: Response) {
     experiencePoints: user?.experiencePoints,
     experiencePointsToNextLevel: user?.experiencePointsToNextLevel,
     consecutiveDays,
+    hasMissionsToCollect,
   });
 }
