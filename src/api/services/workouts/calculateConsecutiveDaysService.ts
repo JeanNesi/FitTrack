@@ -13,7 +13,7 @@ export async function calculateConsecutiveDaysService({ userId }: { userId: stri
 
   if (!workouts.length) return 0;
 
-  let consecutiveDays = 0;
+  let consecutiveDays = 1;
   let previousDate = new Date(workouts[0].initialDateTime);
 
   // Iterar sobre os treinos a partir do segundo treino
@@ -21,7 +21,7 @@ export async function calculateConsecutiveDaysService({ userId }: { userId: stri
     const currentDate = new Date(workouts[i].initialDateTime);
 
     previousDate.setUTCHours(0, 0, 0, 0);
-    currentDate.setUTCHours(3, 0, 0, 0);
+    currentDate.setUTCHours(0, 0, 0, 0);
 
     // Calcular a diferença em milissegundos entre as datas
     const diffTime = Math.abs((currentDate as any) - (previousDate as any));
