@@ -1,6 +1,7 @@
 import { Response, Request } from 'express';
-import { checkValues } from '../../../utils/validator';
+import { checkNeedExists, checkValues } from '../../../utils/validator';
 import { findUser } from '../../../services/users';
+import { hasUserMissionsToCollectService } from '../../../services/usermissions';
 
 export async function findUserController(req: Request, res: Response) {
   const userId = req.user.id;
@@ -22,5 +23,9 @@ export async function findUserController(req: Request, res: Response) {
     where: { id: userId },
   });
 
-  return res.status(200).json({ user });
+  checkNeedExists([{ label: 'Usuário', value: user }]);
+
+  const hasMissionsToCollect = await hasUserMissionsToCollectService({ userId });
+
+  return res.status(200).json({ user, hasMissionsToCollect });
 }

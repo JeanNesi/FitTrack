@@ -3,3 +3,4 @@ export * from './findUserMissionService';
 export * from './createManyUserMissionsOnRegisterService';
 export * from './updateManyUserMissionsProgressService';
 export * from './listUserMissionsService';
+export * from './hasUserMissionsToCollectService';

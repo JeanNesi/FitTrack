@@ -1,4 +1,5 @@
 import { prisma } from '../../../../prisma';
+import { hasUserMissionsToCollectService } from '../usermissions';
 import { calculateConsecutiveDaysService } from '../workouts';
 
 interface IUserMetricsService {
@@ -6,7 +7,7 @@ interface IUserMetricsService {
 }
 
 export async function userMetricsService({ userId }: IUserMetricsService) {
-  const [workoutsAverageTime, missionsCompleted, workoutsExecuted, user, userMissions] =
+  const [workoutsAverageTime, missionsCompleted, workoutsExecuted, user] =
     await prisma.$transaction([
       prisma.workout.aggregate({
         _avg: {
@@ -37,28 +38,10 @@ export async function userMetricsService({ userId }: IUserMetricsService) {
           id: userId,
         },
       }),
-      prisma.userMission.findMany({
-        select: {
-          progress: true,
-          isCompleted: true,
-          mission: {
-            select: {
-              goal: true,
-            },
-          },
-        },
-        where: {
-          userId,
-        },
-      }),
     ]);
 
   const consecutiveDays = await calculateConsecutiveDaysService({ userId });
-  const hasMissionsToCollect = userMissions.some((userMission) => {
-    const isCollectible =
-      userMission.mission.goal <= userMission.progress && !userMission.isCompleted;
-    return isCollectible;
-  });
+  const hasMissionsToCollect = await hasUserMissionsToCollectService({ userId });
 
   return {
     workoutsAverageTime,
