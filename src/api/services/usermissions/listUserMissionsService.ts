@@ -33,7 +33,8 @@ export async function listUserMissionsService({ userId }: IListUserMissionsServi
   });
 
   const userMissionsFormatted = userMissions.map((userMission) => {
-    const isCollectible = userMission.mission.goal <= userMission.progress;
+    const isCollectible =
+      userMission.mission.goal <= userMission.progress && !userMission.isCompleted;
     const newProgress = isCollectible ? userMission.mission.goal : userMission.progress;
 
     return {
